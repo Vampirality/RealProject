@@ -1,10 +1,13 @@
 # RealProject
-  แทนที่ข้อมูลจำนวนเต็ม หรือจำนวนทศนิยม ด้วยข้อมูล "รีล" และบวก ลบ คูณ และหารเลขอะไรก็ได้!! แม้จะเป็นจำนวนที่เกือบจะมากอนันต์หรือเกือบจะน้อยอนันต์!!
+  แทนที่ข้อมูลจำนวนเต็ม หรือจำนวนทศนิยม ด้วยข้อมูลแบบจำนวนจริง (REAL) และบวก ลบ คูณ และหารเลขอะไรก็ได้!! แม้จะเป็นจำนวนที่เกือบจะมากอนันต์หรือเกือบจะน้อยอนันต์!!
 
-  first-looking version for this project:
-    - "Real Object" that obtain "Real Values", "Real Properties" and some fundamental functions, liked setting new value from pattern string.
-    - "Real Operations" that obtain the four basic mathematic operations:
-      - Real add(Real m, Real n)        : addition of m and n
-      - Real minus(Real m, Real n)      : subtraction of m and n
-      - Real multiply(Real m, Real n)   : multiplication of m and n
-      - Real divide(Real m, Real n)     : division of m and n
+  หน้าตาเริ่มแรกของโปรเจกต์นี้ :
+    - วัตถุจำนวนจริง (Real Object) ที่ประกอบด้วยค่าของจำนวนจริง คุณสมบัติของจำนวนจริง และฟังก์ชั่นพื้นฐานบางตัว เช่น การเก็บค่าจากสตริงที่รับเข้ามา
+    - การดำเนินการจำนวนจริง (Real Operation) ที่ประกอบด้วยการดำเนินการทางคณิตศาสตร์พื้นฐานทั้ง 7 ตัว:
+      - Real add(Real m, Real n)               : m + n
+      - Real minus(Real m, Real n)             : m - n
+      - Real multiply(Real m, Real n)          : m * n
+      - Real divide(Real m, Real n)            : m / n (ผลลัพธ์แบบจำนวนทศนิยมไม่เกิน 30 ตำแหน่ง)
+      - Real divide(Real m, Real n, int point) : m / n (ผลลัพธ์แบบจำนวนทศนิยมกำหนดตำแหน่ง)
+      - Real divideInteger(Real m, Real n)     : m / n (ผลลัพธ์แบบจำนวนเต็ม)
+      - Real modulo(Real m, Real n)            : m % n
