@@ -1,5 +1,5 @@
 # RealProject
-  Replace integer/double with "Real" and do addition, subtraction, multiplication and division with any nearly infinite or nearly infinitesimal real numbers!!
+  Replace integer/double with "Real" and do addition, subtraction, multiplication and division with any real numbers!! Even to nearly infinite or nearly infinitesimal!!
 
   first-looking version for this project:
     - "Real Object" that obtain "Real Values", "Real Properties" and some fundamental functions, liked setting new value from pattern string.
