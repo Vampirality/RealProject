@@ -7,8 +7,8 @@
       - Real add(Real m, Real n)               : m + n
       - Real minus(Real m, Real n)             : m - n
       - Real multiply(Real m, Real n)          : m * n
-      - Real divide(Real m, Real n)            : m / n (not more than 30 decimal places real result)
-      - Real divide(Real m, Real n, int point) : m / n (customizable decimal places real result)
+      - Real divide(Real m, Real n)            : m / n (not more than 30 decimal places real output)
+      - Real divide(Real m, Real n, int point) : m / n (customizable decimal places real output)
       - Real divideInteger(Real m, Real n)     : m / n (integer result)
       - Real modulo(Real m, Real n)            : m % n
 
