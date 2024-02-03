@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main extends RealOperation {
+public class App extends RealOperation {
     public static void main(String[] args) {
         Scanner scStr = new Scanner(System.in);
         Scanner scInt = new Scanner(System.in);
