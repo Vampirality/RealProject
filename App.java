@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class App extends RealOperation {
+public class Main extends RealOperation {
     public static void main(String[] args) {
         Scanner scStr = new Scanner(System.in);
         Scanner scInt = new Scanner(System.in);
@@ -9,12 +9,6 @@ public class App extends RealOperation {
         int choice;
 
         while (true) {
-            System.out.print("Enter m : ");
-            m = new Real(scStr.nextLine());
-
-            System.out.print("Enter n : ");
-            n = new Real(scStr.nextLine());
-
             System.out.println("Which operation do you want to do with m and n");
             System.out.println("\t1 addition");
             System.out.println("\t2 subtraction");
@@ -28,6 +22,13 @@ public class App extends RealOperation {
             if (choice == 0) {
                 break;
             }
+
+            System.out.print("Enter m : ");
+            m = new Real(scStr.nextLine());
+
+            System.out.print("Enter n : ");
+            n = new Real(scStr.nextLine());
+
             if (choice == 1) {
                 start = System.currentTimeMillis();
                 result = RealOperation.add(m,n);
