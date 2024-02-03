@@ -194,7 +194,6 @@ public class RealOperation {
 
         i = commonLength - 1;
         if (m.isNegative != n.isNegative) {
-            isNegative = m.isNegative;
             while (true) {
                 arrM[i] += arrN[i];
                 if (i == 0) {
@@ -207,26 +206,38 @@ public class RealOperation {
                 i--;
             }
             if (arrM[0] >= 1000000) {
-                arrM = increaseFrontZero(arrN, 1);
+                arrM = increaseFrontZero(arrM, 1);
                 arrM[0] = 1;
                 arrM[1] -= 1000000;
             }
+            return new Real(arrM, encode, m.isNegative);
         }
         else {
+            int[] arrX, arrY;
             isNegative = isMoreOrEquals(arrM, arrN);
+            if (isNegative) {
+                arrX = arrM;
+                arrY = arrN;
+                isNegative = m.isNegative;
+            } else {
+                arrX = arrN;
+                arrY = arrM;
+                isNegative = n.isNegative;
+            }
+
             while (true) {
-                arrM[i] -= arrN[i];
+                arrX[i] -= arrY[i];
                 if (i == 0) {
                     break;
                 }
-                if (arrM[i] < 0) {
-                    arrM[i] += 1000000;
-                    arrM[i - 1] -= 1;
+                if (arrX[i] < 0) {
+                    arrX[i] += 1000000;
+                    arrX[i - 1] -= 1;
                 }
                 i--;
             }
+            return new Real(arrX, encode, isNegative);
         }
-        return new Real(arrM, encode, isNegative);
     }
 
     public static Real multiply(Real m, Real n) {
