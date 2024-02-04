@@ -3,7 +3,7 @@
 
   first-looking version for this project:
     - "Real Object" that obtain "Real Values", "Real Properties" and some fundamental functions, like setting new value from pattern string.
-    - "Real Operations" that obtain the four basic mathematic operations:
+    - "Real Operations" that obtain the 7 basic mathematic operations:
       - Real add(Real m, Real n)               : m + n
       - Real minus(Real m, Real n)             : m - n
       - Real multiply(Real m, Real n)          : m * n
