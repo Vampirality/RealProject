@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class App extends RealOperation {
+public class Main extends RealOperation {
     public static void main(String[] args) {
         Scanner scStr = new Scanner(System.in);
         Scanner scInt = new Scanner(System.in);
@@ -13,8 +13,9 @@ public class App extends RealOperation {
             System.out.println("\t1 addition");
             System.out.println("\t2 subtraction");
             System.out.println("\t3 multiplication");
-            System.out.println("\t4 division");
-            System.out.println("\t5 modulo");
+            System.out.println("\t4 integer division");
+            System.out.println("\t5 division");
+            System.out.println("\t6 modulo");
             System.out.println("0 stop the program.");
             System.out.print(": ");
             choice = scInt.nextInt();
@@ -22,6 +23,8 @@ public class App extends RealOperation {
             if (choice == 0) {
                 break;
             }
+
+            System.out.println("--------------------------------------------");
 
             System.out.print("Enter m : ");
             m = new Real(scStr.nextLine());
@@ -55,7 +58,13 @@ public class App extends RealOperation {
             }
             else if (choice == 5) {
                 start = System.currentTimeMillis();
-                result = RealOperation.divideInteger(m,n);
+                result = RealOperation.divide(m,n);
+                end = System.currentTimeMillis();
+                System.out.println(m.getFullNumber() + " / " + n.getFullNumber());
+            }
+            else if (choice == 6) {
+                start = System.currentTimeMillis();
+                result = RealOperation.modulo(m,n);
                 end = System.currentTimeMillis();
                 System.out.println(m.getFullNumber() + " % " + n.getFullNumber());
             }
