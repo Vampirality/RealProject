@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class RealOperation {
     
     /* MAIN PURPOSED FUNCTIONS */
@@ -528,6 +526,217 @@ public class RealOperation {
                 if (i == 5) {
                     break;
                 }
+                while (j < k) {
+                    arrX[j] = arrX[j + 1];
+                    arrY[j] = arrY[j + 1];
+                    j++;
+                }
+                arrX[k] = 0;
+                arrY[k] = 0;
+            } else {
+                exp /= 10;
+            }
+            j = k;
+            while (j > 0) {
+                arrY[j] = arrY[j] / 10 + (arrY[j - 1] % 10) * 100000;
+                j--;
+            }
+            arrY[0] /= 10;
+        }
+
+        return new Real(resultInteger, resultDecimal, m.isNegative != n.isNegative);
+    }
+
+    public static Real divide(Real m, Real n, int point) {
+        if (m.isIndefinite || n.isIndefinite) {
+            return new Real("indefinite");
+        }
+        if (m.isInfinite && n.isInfinite) {
+            return new Real("indefinite");
+        }
+        if (m.isInfinite) {
+            return new Real("infinite");
+        }
+        if (n.isInfinite) {
+            return new Real("zero");
+        }
+        if ((m.realInteger == null && m.realDecimal == null) && (n.realInteger == null && n.realDecimal == null)) {
+            return new Real("indefinite");
+        }
+        if (m.realInteger == null && m.realDecimal == null) {
+            return new Real("zero");
+        }
+        if (n.realInteger == null && n.realDecimal == null) {
+            return new Real("infinite");
+        }
+        if (n.realInteger != null) {
+            if (n.realInteger.length == 1 && n.realInteger[0] == 1 && n.realDecimal == null) {
+                return m;
+            }
+        }
+
+        /* STEP 1 : scaling */
+        int commonLength, mLength, nLength, i, j, k, l, exp;
+        int[] dividend, subtract, resultInteger, resultDecimal;
+
+        mLength = nLength = 0;
+        if (m.realInteger != null) {
+            mLength = m.realInteger.length;
+        }
+        if (n.realInteger != null) {
+            nLength = n.realInteger.length;
+        }
+        if (mLength > nLength) {
+            i = 0;
+            commonLength = mLength;
+            resultInteger = new int[mLength - nLength + 1];
+        }
+        else {
+            i = nLength - mLength;
+            commonLength = nLength;
+            resultInteger = new int[1];
+        }
+        j = commonLength;
+
+        mLength = nLength = 0;
+        if (m.realDecimal != null) {
+            mLength = m.realDecimal.length;
+        }
+        if (n.realDecimal != null) {
+            nLength = n.realDecimal.length;
+        }
+        commonLength += Math.max(mLength, nLength);
+        dividend = new int[commonLength];
+        subtract = new int[commonLength];
+
+        if (m.realInteger != null) {
+            System.arraycopy(m.realInteger, 0, dividend, i, m.realInteger.length);
+        }
+        if (m.realDecimal != null) {
+            System.arraycopy(m.realDecimal, 0, dividend, j, m.realDecimal.length);
+        }
+        if (n.realInteger != null) {
+            System.arraycopy(n.realInteger, 0, subtract, 0, n.realInteger.length);
+            if (n.realDecimal != null) {
+                System.arraycopy(n.realDecimal, 0, subtract, n.realInteger.length, n.realDecimal.length);
+            }
+        } else {
+            System.arraycopy(n.realDecimal, 0, subtract, 0, n.realDecimal.length);
+        }
+
+        /* STEP 2 : n-synchronization */
+        exp = 1;
+        k = dividend.length - 1;
+        if (i == 0) {
+            i = dividend[0];
+            while (i > 0) {
+                i /= 10;
+                exp *= 10;
+            }
+            i = subtract[0];
+            while (i > 0) {
+                i /= 10;
+                exp /= 10;
+            }
+            if (exp > 1) {
+                i = 0;
+                j = 1000000 / exp;
+                while (i < k) {
+                    subtract[i] = (subtract[i] * exp) + (subtract[i + 1] / j);
+                    subtract[i + 1] %= j;
+                    i++;
+                }
+                subtract[k] *= exp;
+            } else {
+                exp = 1;
+            }
+        }
+
+        /* STEP 3 : division to find real integer */
+        i = 0;
+        while (true) {
+            while (isMoreOrEquals(dividend, subtract)) {
+                j = k;
+                while (j > 0) {
+                    dividend[j] -= subtract[j];
+                    if (dividend[j] < 0) {
+                        dividend[j] += 1000000;
+                        dividend[j - 1] -= 1;
+                    }
+                    j--;
+                }
+                dividend[0] -= subtract[0];
+                resultInteger[i] += exp;
+            }
+            if (exp == 1) {
+                exp = 100000;
+                i++;
+            } else {
+                exp /= 10;
+            }
+            if (i == resultInteger.length) {
+                break;
+            }
+            j = k;
+            while (j > 0) {
+                subtract[j] = subtract[j] / 10 + (subtract[j - 1] % 10) * 100000;
+                j--;
+            }
+            subtract[0] /= 10;
+        }
+
+        /* STEP 4 : transformation of m, n */
+        if (point <= 0) {
+            return new Real(resultInteger, 0, m.isNegative != n.isNegative);
+        }
+
+        i = 0;
+        while (i < commonLength) {
+            if (dividend[i] != 0 || subtract[i] != 0) {
+                break;
+            }
+            i++;
+        }
+
+        int[] arrX = new int[commonLength - i + 1];
+        int[] arrY = new int[commonLength - i + 1];
+
+        System.arraycopy(dividend, i, arrX, 0, dividend.length - i);
+        System.arraycopy(subtract, i, arrY, 0, subtract.length - i);
+
+        k = arrX.length - 1;
+        j = k;
+        while (j > 0) {
+            arrY[j] = arrY[j] / 10 + (arrY[j - 1] % 10) * 100000;
+            j--;
+        }
+        arrY[0] /= 10;
+
+        /* STEP 5 : division to find real decimal */
+        resultDecimal = new int[(point - 1)/6 + 1];
+        i = 0;
+        l = 0;
+        while (true) {
+            while (isMoreOrEquals(arrX, arrY)) {
+                j = k;
+                while (j > 0) {
+                    arrX[j] -= arrY[j];
+                    if (arrX[j] < 0) {
+                        arrX[j] += 1000000;
+                        arrX[j - 1] -= 1;
+                    }
+                    j--;
+                }
+                arrX[0] -= arrY[0];
+                resultDecimal[i] += exp;
+            }
+            l++;
+            if (l == point) {
+                break;
+            }
+            if (exp == 1) {
+                exp = 100000;
+                i++;
                 while (j < k) {
                     arrX[j] = arrX[j + 1];
                     arrY[j] = arrY[j + 1];
