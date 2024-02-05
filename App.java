@@ -6,24 +6,32 @@ public class Main extends RealOperation {
         Scanner scInt = new Scanner(System.in);
         Real m, n, result;
         int choice, choiceSame, point;
-        boolean inputBool;
+        boolean ChooseChoice, SameChoice;
 
         choice = 0;
-        inputBool = true;
+        ChooseChoice = true;
+        SameChoice = false;
         while (true) {
-            if (choice > 0 && choice <= 8) {
-                choiceSame = 2;
-                while (choiceSame != 0 && choiceSame != 1) {
+            if (SameChoice) {
+                while (true) {
                     System.out.println("Do you want to do same operation???");
                     System.out.println("\t1 yes");
                     System.out.println("\t0 no");
                     System.out.print(": ");
                     choiceSame = scInt.nextInt();
+                    if (choiceSame == 0) {
+                        System.out.println("--------------------------------------------");
+                        break;
+                    }
+                    if (choiceSame == 1) {
+                        break;
+                    }
+                    System.out.println("--------------------------------------------");
                 }
-                inputBool = choiceSame == 0;
+                ChooseChoice = choiceSame == 0;
             }
 
-            if (inputBool) {
+            if (ChooseChoice) {
                 System.out.println("Which operation do you want to do with m and n???");
                 System.out.println("\t1 addition");
                 System.out.println("\t2 subtraction");
@@ -40,11 +48,11 @@ public class Main extends RealOperation {
             if (choice == 0) {
                 break;
             }
-            if (choice < 0 || choice > 7) {
+            System.out.println("--------------------------------------------");
+            SameChoice = choice >= 1 && choice <= 7;
+            if (!SameChoice) {
                 continue;
             }
-
-            System.out.println("--------------------------------------------");
 
             System.out.print("Enter m : ");
             m = new Real(scStr.nextLine());
