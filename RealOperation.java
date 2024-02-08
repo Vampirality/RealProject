@@ -1,12 +1,37 @@
 public class RealOperation {
-    
     /* MAIN PURPOSED FUNCTIONS */
     public static Real add(Real m, Real n) {
         if (m.isIndefinite || n.isIndefinite) {
             return new Real("indefinite");
         }
-        if (m.isInfinite || n.isInfinite) {
-            return new Real("indefinite");
+        if (m.isInfinite && n.isInfinite) {
+            if (m.isNegative == n.isNegative) {
+                if (m.isNegative) {
+                    return new Real("negative infinity");
+                }
+                else {
+                    return new Real("positive infinity");
+                }
+            }
+            else {
+                return new Real("indefinite");
+            }
+        }
+        if (m.isInfinite) {
+            if (m.isNegative) {
+                return new Real("negative infinity");
+            }
+            else {
+                return new Real("positive infinity");
+            }
+        }
+        if (n.isInfinite) {
+            if (n.isNegative) {
+                return new Real("negative infinity");
+            }
+            else {
+                return new Real("positive infinity");
+            }
         }
         if (m.realInteger == null && m.realDecimal == null && n.realInteger == null && n.realDecimal == null) {
             return new Real("zero");
@@ -125,8 +150,34 @@ public class RealOperation {
         if (m.isIndefinite || n.isIndefinite) {
             return new Real("indefinite");
         }
-        if (m.isInfinite || n.isInfinite) {
-            return new Real("indefinite");
+        if (m.isInfinite && n.isInfinite) {
+            if (m.isNegative != n.isNegative) {
+                if (m.isNegative) {
+                    return new Real("negative infinity");
+                }
+                else {
+                    return new Real("positive infinity");
+                }
+            }
+            else {
+                return new Real("indefinite");
+            }
+        }
+        if (m.isInfinite) {
+            if (m.isNegative) {
+                return new Real("negative infinity");
+            }
+            else {
+                return new Real("positive infinity");
+            }
+        }
+        if (n.isInfinite) {
+            if (n.isNegative) {
+                return new Real("positive infinity");
+            }
+            else {
+                return new Real("negative infinity");
+            }
         }
         if (m.realInteger == null && m.realDecimal == null && n.realInteger == null && n.realDecimal == null) {
             return new Real("zero");
@@ -245,7 +296,12 @@ public class RealOperation {
             return new Real("indefinite");
         }
         if (m.isInfinite || n.isInfinite) {
-            return new Real("infinite");
+            if (m.isNegative == n.isNegative) {
+                return new Real("positive infinity");
+            }
+            else {
+                return new Real("negative infinity");
+            }
         }
         if ((m.realInteger == null && m.realDecimal == null) || (n.realInteger == null && n.realDecimal == null)) {
             return new Real("zero");
@@ -350,7 +406,12 @@ public class RealOperation {
             return new Real("indefinite");
         }
         if (m.isInfinite) {
-            return new Real("infinite");
+            if (m.isNegative) {
+                return new Real("negative infinite");
+            }
+            else {
+                return new Real("positive infinite");
+            }
         }
         if (n.isInfinite) {
             return new Real("zero");
@@ -555,7 +616,12 @@ public class RealOperation {
             return new Real("indefinite");
         }
         if (m.isInfinite) {
-            return new Real("infinite");
+            if (m.isNegative) {
+                return new Real("negative infinite");
+            }
+            else {
+                return new Real("positive infinite");
+            }
         }
         if (n.isInfinite) {
             return new Real("zero");
@@ -766,7 +832,12 @@ public class RealOperation {
             return new Real("indefinite");
         }
         if (m.isInfinite) {
-            return new Real("infinite");
+            if (m.isNegative) {
+                return new Real("negative infinite");
+            }
+            else {
+                return new Real("positive infinite");
+            }
         }
         if (n.isInfinite) {
             return new Real("zero");
@@ -780,10 +851,15 @@ public class RealOperation {
         if (n.realInteger == null && n.realDecimal == null) {
             return new Real("infinite");
         }
+        if (n.realInteger != null) {
+            if (n.realInteger.length == 1 && n.realInteger[0] == 1 && n.realDecimal == null) {
+                return m;
+            }
+        }
 
         /* STEP 1 : scaling */
         int commonLength, mLength, nLength, i, j, k, exp;
-        int[] dividend, subtract, result;
+        int[] dividend, subtract, resultInteger;
 
         mLength = nLength = 0;
         if (m.realInteger != null) {
@@ -792,14 +868,17 @@ public class RealOperation {
         if (n.realInteger != null) {
             nLength = n.realInteger.length;
         }
-        if (nLength > mLength) {
-            return new Real("zero");
+        if (mLength > nLength) {
+            i = 0;
+            commonLength = mLength;
+            resultInteger = new int[mLength - nLength + 1];
         }
-        result = new int[mLength];
-
-        i = 0;
-        j = mLength;
-        commonLength = mLength;
+        else {
+            i = nLength - mLength;
+            commonLength = nLength;
+            resultInteger = new int[1];
+        }
+        j = commonLength;
 
         mLength = nLength = 0;
         if (m.realDecimal != null) {
@@ -829,29 +908,30 @@ public class RealOperation {
 
         /* STEP 2 : n-synchronization */
         exp = 1;
-        i = dividend[0];
-        while (i > 0) {
-            i /= 10;
-            exp *= 10;
-        }
-        i = subtract[0];
-        while (i > 0) {
-            i /= 10;
-            exp /= 10;
-        }
         k = dividend.length - 1;
-        if (exp > 1) {
-            i = 0;
-            j = 1000000 / exp;
-            while (i < k) {
-                subtract[i] = (subtract[i] * exp) + (subtract[i + 1] / j);
-                subtract[i + 1] %= j;
-                i++;
+        if (i == 0) {
+            i = dividend[0];
+            while (i > 0) {
+                i /= 10;
+                exp *= 10;
             }
-            subtract[k] *= exp;
-        }
-        else {
-            exp = 1;
+            i = subtract[0];
+            while (i > 0) {
+                i /= 10;
+                exp /= 10;
+            }
+            if (exp > 1) {
+                i = 0;
+                j = 1000000 / exp;
+                while (i < k) {
+                    subtract[i] = (subtract[i] * exp) + (subtract[i + 1] / j);
+                    subtract[i + 1] %= j;
+                    i++;
+                }
+                subtract[k] *= exp;
+            } else {
+                exp = 1;
+            }
         }
 
         /* STEP 3 : division to find real integer */
@@ -868,7 +948,7 @@ public class RealOperation {
                     j--;
                 }
                 dividend[0] -= subtract[0];
-                result[i] += exp;
+                resultInteger[i] += exp;
             }
             if (exp == 1) {
                 exp = 100000;
@@ -876,7 +956,7 @@ public class RealOperation {
             } else {
                 exp /= 10;
             }
-            if (i == result.length) {
+            if (i == resultInteger.length) {
                 break;
             }
             j = k;
@@ -887,7 +967,7 @@ public class RealOperation {
             subtract[0] /= 10;
         }
 
-        return new Real(result, 0, m.isNegative != n.isNegative);
+        return new Real(resultInteger, 0, m.isNegative != n.isNegative);
     }
 
     public static Real modulo(Real m, Real n) {
@@ -898,7 +978,7 @@ public class RealOperation {
             return new Real("indefinite");
         }
         if (m.isInfinite) {
-            return new Real("infinite");
+            return new Real("indefinite");
         }
         if (n.isInfinite) {
             return new Real("zero");
@@ -1023,7 +1103,6 @@ public class RealOperation {
     }
 
     /* HELPING PURPOSED FUNCTIONS */
-
     public static boolean isMoreOrEquals(int[] m, int[] n) {
         boolean isMore = m.length > n.length;
         boolean isEquals = m.length == n.length;
