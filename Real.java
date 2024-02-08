@@ -42,43 +42,50 @@ public class Real {
     }
 
     Real(int[] n, int encode, boolean isNegative) {
+        this.isNegative = isNegative;
         this.isIndefinite = this.isInfinite = false;
-        int i = 0;
+        int zero_front = 0;
         int j, zero_back;
-        while (i < n.length) {
-            if (n[i] != 0) {
+
+        int[] arrInt, arrDec;
+        while (zero_front < n.length) {
+            if (n[zero_front] != 0) {
                 break;
             }
-            i++;
+            zero_front++;
         }
-        if (i == n.length) {
+        if (zero_front == n.length) {
             return;
         }
         else {
             j = n.length - 1;
             while (j >= 0) {
                 if (n[j] != 0) {
+                    j++;
                     break;
                 }
                 j--;
             }
         }
-        zero_back = n.length - j - 1;
+        zero_back = n.length - j;
         if (encode <= zero_back) {
-            this.realInteger = new int[n.length - i - encode];
-            System.arraycopy(n, i, this.realInteger, 0, j - i + 1);
+            arrInt = new int[n.length - zero_front - encode];
+            System.arraycopy(n, zero_front, arrInt, 0, j - zero_front);
+            this.realInteger = arrInt;
         }
-        else if (encode < n.length - zero_back) {
-            this.realInteger = new int[n.length - encode - i];
-            this.realDecimal = new int[encode - zero_back];
-            System.arraycopy(n,i,this.realInteger,0,this.realInteger.length);
-            System.arraycopy(n,i + this.realInteger.length, this.realDecimal, 0, this.realDecimal.length);
+        else if (encode < n.length - zero_front) {
+            arrInt = new int[n.length - zero_front - encode];
+            arrDec = new int[encode - zero_back];
+            System.arraycopy(n,zero_front,arrInt,0,arrInt.length);
+            System.arraycopy(n,zero_front + arrInt.length, arrDec, 0, arrDec.length);
+            this.realInteger = arrInt;
+            this.realDecimal = arrDec;
         }
         else {
-            this.realDecimal = new int[encode - zero_back];
-            System.arraycopy(n, i, this.realDecimal, encode - i - n.length, j - i + 1);
+            arrDec = new int[encode - zero_back];
+            System.arraycopy(n, zero_front, arrDec, encode + zero_front - n.length, j - zero_front);
+            this.realDecimal = arrDec;
         }
-        this.isNegative = isNegative;
     }
 
     public void setNewValue(String num) {
@@ -245,5 +252,4 @@ public class Real {
     public void multiplyByOneNegative() {
         this.isNegative = !this.isNegative;
     }
-
 }
